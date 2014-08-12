@@ -1,0 +1,1 @@
+/home/loomy/bin/mp3naming.sh
