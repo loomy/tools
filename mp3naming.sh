@@ -16,7 +16,6 @@ checkresults(){
 		resource_url="$(echo "$2" | getJsonVal.sh "['results'][$i]['resource_url']")"
 		jsonlocal=$(curl --get $resource_url 2>/dev/null)
 		title="$(echo "$jsonlocal" |getJsonVal.sh "['tracklist'][$((files - 1))]['title']")"
-		echo "$title" >> /tmp/titletest
 		if [ $? -eq 0 ] && [ "x$title" != "x" ];then
 			echo "$resource_url"
 			return
