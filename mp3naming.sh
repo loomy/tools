@@ -21,7 +21,7 @@ jsonout=""
 
 checkresults(){
 	let i=0
-	files=$(ls | wc -l)
+	files=$(ls *.mp3 2>/dev/null | wc -l)
 	while [ $i -lt $1 ] ;do
 		resource_url="$(echo "$2" | getJsonVal.sh "['results'][$i]['resource_url']")"
 		jsonlocal=$(curl --get $resource_url 2>/dev/null)
