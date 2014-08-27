@@ -1,4 +1,14 @@
 #!/bin/sh
+#
+#fetches id3 information for songs and stores it with id3v2
+#
+# naming scheme:
+#	band_name-album_name/
+#	band_name-album_name-tracknumber.mp3
+# example dirname
+#	trombone_shorty-say_that_to_say_this
+
+
 #exec 2>/dev/null
 
 if [ "x$1" = "x" ] ;then
@@ -32,6 +42,7 @@ for file in $1 ; do
     if [ -d $file ];then
         #go into dir
         pushd "$file"
+	file=$(basename "$file")
 	file=${file%\\}
 	band=$(echo ${file#\.\/} | cut -d- -f1)
 	album=$(echo $file | cut -d- -f2)
