@@ -39,7 +39,7 @@ checkresults(){
 doit(){
 for file in $1 ; do
     echo -en "doing $file: "
-    if [ -d $file ];then
+    if [ -d "$file" ];then
         #go into dir
         pushd "$file"
 	file=$(basename "$file")
@@ -72,7 +72,7 @@ for file in $1 ; do
 	fi
         doit "./*"
         popd
-    elif [ -f $file ];then
+    elif [ -f "$file" ];then
         if [ "$file" != "${file%\.mp3}" ] ;then
 		track=$(echo ${file%\.mp3} | cut -d- -f3)
 		tracknum=${track#0}
