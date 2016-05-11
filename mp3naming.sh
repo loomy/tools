@@ -16,6 +16,7 @@ if [ "x$1" = "x" ] ;then
     exit 1
 fi
 
+curlopts="--user loomy:tralala"
 genrestring=""
 jsonout=""
 
@@ -24,7 +25,7 @@ checkresults(){
 	files=$(ls *.mp3 2>/dev/null | wc -l)
 	while [ $i -lt $1 ] ;do
 		resource_url="$(echo "$2" | getJsonVal.sh "['results'][$i]['resource_url']")"
-		jsonlocal=$(curl --get $resource_url 2>/dev/null)
+		jsonlocal=$(curl $curlopts --get $resource_url 2>/dev/null)
 		title="$(echo "$jsonlocal" |getJsonVal.sh "['tracklist'][$((files - 1))]['title']")"
 		if [ $? -eq 0 ] && [ "x$title" != "x" ];then
 			echo "$resource_url"
@@ -50,9 +51,9 @@ for file in $1 ; do
 	album=${album//_/ }
 	genrestring=""
 	resource_url="NIX"
-	jsonout=$(curl --get --data-urlencode "release_title=$album" --data-urlencode "artist=$band" "http://api.discogs.com/database/search?type=release" --user-agent "FooBarApp/3.0" 2>/dev/null)
+	jsonout=$(curl $curlopts --get --data-urlencode "release_title=$album" --data-urlencode "artist=$band" "http://api.discogs.com/database/search?type=release" --user-agent "FooBarApp/3.0" 2>/dev/null)
 	results=$(echo "$jsonout" | getJsonVal.sh "['pagination']['items']")
-	if [ $results -gt 1 ];then
+	if [ ! -z $results ] && [ $results -gt 1 ];then
 		resource_url=$(checkresults $results "$jsonout")
 	fi
 	[ "$resource_url" = "NIX" ] && resource_url="$(echo "$jsonout" | getJsonVal.sh "['results'][0]['resource_url']")"
@@ -66,7 +67,7 @@ for file in $1 ; do
 	jsonout=""
 	if [ "x$resource_url" != "x" ];then
 	    url=${resource_url//\"/}
-	    jsonout=$(curl --get $url 2>/dev/null)
+	    jsonout=$(curl $curlopts --get $url 2>/dev/null)
 	else
 		echo -e "nothing found for query http://api.discogs.com/database/search?type=release&release_title=$album&artist=$band"
 	fi
